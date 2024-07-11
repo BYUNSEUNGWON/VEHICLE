@@ -93,6 +93,7 @@ img {
 
     <div style="margin-left:35%;padding:1px 16px;height:1000px;">
         <h1>지도 들어갈 위치</h1>
+        커밋 test 123
         <c:forEach var="menuItem" items="${menu}">
             <li>${menuItem}</li>
         </c:forEach>
