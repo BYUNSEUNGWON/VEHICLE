@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.bsw.vehicle.common.service.CommonService;
 
 @Controller
-public class CommonContorller {
+public class CommonController {
 	
 	@Autowired
 	private CommonService commonService;
@@ -23,5 +23,6 @@ public class CommonContorller {
 	    
 		 return "/common/index"; 
 	}
+	
 
 }
