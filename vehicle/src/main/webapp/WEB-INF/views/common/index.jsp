@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>포항 자동차 정비 업체 모아보기</title>
 <style>
 
@@ -13,14 +14,14 @@
     background-color: white;
     position: fixed;
     height: 100%;
-    width: 370px;
+    width: 18%;
     border-right: #cdcdcd solid 1px;
     text-align: center;
 }
 
 .search {
   position: relative;
-  width: 300px;
+  width: 80%;
   margin-left: 5%;
   margin-top: 5%;
 }
@@ -37,7 +38,7 @@ img {
   position : absolute;
   width: 17px;
   top: 10px;
-  right: 12px;
+  right: 1%;
   margin: 0;
 }
 
@@ -47,7 +48,7 @@ img {
 
     <div class="secNav">
 	    <div class="search">
-			<input type="text" placeholder="검색어 입력">
+			<input type="text" placeholder="검색어를 입력하여 주세오.">
 		 	<img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
 		</div>
     </div>
@@ -59,8 +60,8 @@ img {
 <script>
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
     mapOption = { 
-        center: new kakao.maps.LatLng(36.0134925, 129.3497143), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(36.0134925, 129.3479143), // 지도의 중심좌표
+        level: 2 // 지도의 확대 레벨
     };
 
 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
@@ -106,4 +107,4 @@ for (var i = 0; i < positions.length; i ++) {
 }
 </script>
 </body>
-</html>
+</html> 
