@@ -69,8 +69,8 @@ var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니
 // 마커를 표시할 위치와 title 객체 배열입니다 
 var positions = [
     {
-        title: '카카오', 
-        latlng: new kakao.maps.LatLng(33.450705, 126.570677)
+        title: '배용식자동차병원', 
+        latlng: new kakao.maps.LatLng(36.01448903, 129.347004)
     },
     {
         title: '생태연못', 
