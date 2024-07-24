@@ -45,7 +45,6 @@ img {
 </style>
 </head>
 <body>
-
     <div class="secNav">
 	    <div class="search">
 			<input type="text" placeholder="검색어를 입력하여 주세오.">
@@ -58,6 +57,7 @@ img {
     
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e41c2ad46b1eb9e6f6108f89aca1da7c"></script>
 <script>
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
     mapOption = { 
         center: new kakao.maps.LatLng(36.0134925, 129.3479143), // 지도의 중심좌표

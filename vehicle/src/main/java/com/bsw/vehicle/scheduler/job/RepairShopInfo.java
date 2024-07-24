@@ -23,7 +23,7 @@ public class RepairShopInfo {
     private String apiUrl;
     
 	
-	// 30초마다
+	/*
 	@Scheduled(fixedDelay = 3000000)
 	public void run(){
 		System.out.println("스케줄러 실행중");
@@ -82,4 +82,5 @@ public class RepairShopInfo {
 		    e.printStackTrace();
 		}
 	}
+	*/
 }
