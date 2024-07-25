@@ -1,11 +1,12 @@
 package com.bsw.vehicl.model;
 
-public class Promotion {
+public class Transaction {
 	private Long id;
     private String title;
     private String contents;
     private String name;
     private Long fileId;
+    
 	public Long getId() {
 		return id;
 	}
