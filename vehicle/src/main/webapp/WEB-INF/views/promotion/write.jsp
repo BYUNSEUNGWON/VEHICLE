@@ -68,7 +68,7 @@
         const btnOrderedList = document.getElementById('btn-ordered-list');
         const btnUnorderedList = document.getElementById('btn-unordered-list');
         const title = document.getElementById('title');
-        
+
         btnBold.addEventListener('click', function () {
             setStyle('bold');
         });
@@ -157,6 +157,7 @@
             focusEditor();
             checkStyle();
         }
+        
 
         // 에디터에 포커스를 주는 함수
         function focusEditor() {
