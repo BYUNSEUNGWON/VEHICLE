@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'war'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
 }
@@ -24,12 +25,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	//implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
    	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	//implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'jakarta.servlet:jakarta.servlet-api'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat' 
 
 }
 

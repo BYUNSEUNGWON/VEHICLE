@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.bsw.vehicl.model.Notice;
+import com.bsw.vehicle.model.Notice;
 
 @Controller
 public class NoticeController {

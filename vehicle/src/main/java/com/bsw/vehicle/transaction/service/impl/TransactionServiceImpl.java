@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.bsw.vehicl.model.Transaction;
+import com.bsw.vehicle.model.Transaction;
 import com.bsw.vehicle.transaction.service.TransactionService;
 
 @Service

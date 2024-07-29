@@ -1,4 +1,4 @@
-package com.bsw.vehicl.model;
+package com.bsw.vehicle.model;
 
 public class Notice {
     private int bno;

@@ -2,7 +2,7 @@ package com.bsw.vehicle.transaction.service;
 
 import java.util.List;
 
-import com.bsw.vehicl.model.Transaction;
+import com.bsw.vehicle.model.Transaction;
 
 public interface TransactionService {
 	
