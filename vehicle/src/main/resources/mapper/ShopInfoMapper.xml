@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bsw.vehicle.mapper.ShopInfoMapper">
+    <insert id="insertShop" parameterType="HashMap">
+    	INSERT INTO IA_REPAIR_TN
+			(
+			  MANAGER_NM,
+			  MANAGER_NUM,
+			  DATA_DT,
+			  BIZ_REGIST_DT,
+			  MAP_ADDR_NM,
+			  COMPANY,
+			  NUMBER,
+			  LATITUDE,
+			  HARDNESS,
+			  STATE,
+			  REGIST_DT,
+			  UPDT_DT
+			)
+			VALUES (
+			  #{manageOrgNm},
+			  #{manageAgenNum},
+			  #{dataDt},
+			  #{businessRegistDt},
+			  #{locationMapAddrNm},
+			  #{company},
+			  #{number},
+			  #{latitude},
+			  #{hardness},
+			  #{state},
+			  NOW(),
+			  NOW()
+			)
+			ON DUPLICATE KEY UPDATE
+			  MANAGER_NM = #{manageOrgNm},
+			  MANAGER_NUM = #{manageAgenNum},
+			  DATA_DT = #{dataDt},
+			  BIZ_REGIST_DT = #{businessRegistDt},
+			  MAP_ADDR_NM = #{locationMapAddrNm},
+			  COMPANY = #{company},
+			  NUMBER = #{number},
+			  LATITUDE = #{latitude},
+			  HARDNESS = #{hardness},
+			  STATE = #{state},
+			  UPDT_DT = NOW()
+    </insert>
+</mapper>

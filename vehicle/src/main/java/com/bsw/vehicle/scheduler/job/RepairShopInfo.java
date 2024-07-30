@@ -1,7 +1,6 @@
 package com.bsw.vehicle.scheduler.job;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,20 +10,29 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.junit.experimental.theories.DataPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import com.bsw.vehicle.mapper.ShopInfoMapper;
+
+/**
+ * 24-07-30 BSW
+ * 국가 데이터 포탈에서 JSON 형태로 포항시 정비업소 현황을 받아오는 API
+ */
 
 @Component
 public class RepairShopInfo {
 	
 	@Value("${api.url}")
     private String apiUrl;
-    
 	
-	/*
-	@Scheduled(fixedDelay = 3000000)
+	@Autowired
+	ShopInfoMapper shopInfoMapper;
+	
+	@Scheduled(cron = "0 0 6 * * *")
 	public void run(){
 		System.out.println("스케줄러 실행중");
 	
@@ -75,12 +83,16 @@ public class RepairShopInfo {
 		        map.put("latitude", (String) data.get("위도"));
 		        map.put("hardness", (String) data.get("경도"));
 		        map.put("state", (Long) data.get("영업상태"));
-
+		        
+		        //System.out.println("데이터 ==> " + map);
+		        
+		        shopInfoMapper.insertShop(map);
+		        
 		    }
 		    
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
 	}
-	*/
+	
 }
