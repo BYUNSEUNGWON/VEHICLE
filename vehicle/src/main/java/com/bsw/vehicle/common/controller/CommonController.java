@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bsw.vehicle.common.service.CommonService;
 import com.bsw.vehicle.model.RepairVO;
@@ -35,5 +38,19 @@ public class CommonController {
 	    
 	    return ResponseEntity.ok().body(repair);
 	    
+	}
+	
+	@GetMapping("/vehicle/search.ex")
+	public ResponseEntity<RepairVO[]> search(@RequestParam("keyword") String keyword) throws Exception {
+
+		RepairVO searchResults[] = commonService.search(keyword);
+		
+	    if (StringUtils.isEmpty(keyword)) {
+	        RepairVO[] emptyResults = {}; // 빈 검색 결과 생성
+	        
+	        return ResponseEntity.ok().body(emptyResults);
+	    }
+		
+	    return ResponseEntity.ok().body(searchResults);
 	}
 }

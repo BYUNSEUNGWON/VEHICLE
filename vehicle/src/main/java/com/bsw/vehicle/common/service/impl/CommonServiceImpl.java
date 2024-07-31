@@ -33,4 +33,14 @@ public class CommonServiceImpl implements CommonService{
 	    return resultList.toArray(new RepairVO[0]); // 리스트를 배열로 변환하여 반환
 	}
 
+	@Override
+	public RepairVO[] search(String keyword) throws Exception {
+		
+		RepairVO[] resultSearchList = repairMapper.searchItems(keyword);
+		
+		System.out.println("result length --> " + resultSearchList.length);
+		
+		return resultSearchList;
+	}
+
 }

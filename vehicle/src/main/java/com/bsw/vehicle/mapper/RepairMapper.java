@@ -10,5 +10,7 @@ import com.bsw.vehicle.model.RepairVO;
 public interface RepairMapper {
 	
 	    List<RepairVO> selectItems() throws Exception;
+	    
+	    RepairVO[] searchItems(String keyword) throws Exception;
 	
 }

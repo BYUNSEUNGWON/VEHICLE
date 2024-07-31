@@ -9,5 +9,8 @@ public interface CommonService {
 	List<String>menu() throws Exception;
 
 	RepairVO[] item() throws Exception;
+
+	RepairVO[] search(String keyword) throws Exception;
+	
 	
 }

@@ -42,19 +42,41 @@ img {
   margin: 0;
 }
 
+#searchResults {
+  width: 100%;
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.keywordList {
+  cursor: pointer;
+  color: black;
+}
+
+.keywordList:hover {
+    background-color: #D3D3D3;
+}
+
+.active {
+    background-color: #D3D3D3;
+}
 </style>
 </head>
 <body>
     <div class="secNav">
 	    <div class="search">
-			<input type="text" placeholder="검색어를 입력하여 주세오.">
+			<input type="text" id="searchInput" placeholder="검색어를 입력하여 주세오.">
 		 	<img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
+	 	    <div id="searchResults"></div> 	
 		</div>
 		
-		<button id="getCurrentLocationButton">내위치찾기</button>
+		<!-- 해당 api가 위도, 경도 구해주는 정확도가 많이 떨어져서... 일단은 주석 처러.. -->
+		<!-- <button id="getCurrentLocationButton">내위치찾기</button>  -->
     </div>
 
-    <div id="map" style="margin-left:28%;padding:1px 16px;height:1000px;"></div>
+    <div id="map" style="margin-left:28%;padding:1px 16px;height:1000px;">
+    	<div>ks</div>
+    </div>
     
 
 <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -112,14 +134,17 @@ function makePosition(itemList) {
 	    position.push(pos);
 	}
 	
-	callKakao(position)
+	callKakao(position, null, null)
 }
 
-function callKakao(positions){
+function callKakao(positions, lat, hard){
+	
+	if(lat == null) lat = 36.0134925;
+	if(hard == null) hard = 129.3479143;
 	
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
 	    mapOption = { 
-	        center: new kakao.maps.LatLng(36.0134925, 129.3479143), // 지도의 중심좌표
+	        center: new kakao.maps.LatLng(lat, hard), // 지도의 중심좌표
 	        level: 2 // 지도의 확대 레벨
 	    };
 
@@ -141,8 +166,17 @@ function callKakao(positions){
 	        map: map, // 마커를 표시할 지도
 	        position: positions[i].latlng, // 마커를 표시할 위치
 	        title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-	        image : markerImage // 마커 이미지 
+	        image : markerImage // 마커 이미지
 	    });
+	    
+	    kakao.maps.event.addListener(marker, 'click', function (){
+	        var position = this.getPosition();
+	        var title = this.getTitle();
+	        console.log(position.Ma);
+	        console.log(position.La);
+	        console.log(title);
+	    });
+	   
 	}
 }
 
@@ -162,7 +196,64 @@ $(document).ready(function(){
 
     var getCurrentLocationButton = document.querySelector('#getCurrentLocationButton');
     getCurrentLocationButton.addEventListener('click', getCurrentLocation);
+   
 });
+
+var currentTag = null;
+
+function keywordClick(element, paramList){
+	
+    if (currentTag !== null) {
+        currentTag.classList.remove("active");
+    }
+
+    element.classList.add("active");
+    currentTag = element;
+	
+    var arr = paramList.split(",");
+    var company = arr[0];  // 상호명
+    var latitude = arr[1]; // 위도
+    var hardness = arr[2]; // 경도
+    
+    var position = [];
+    
+    var pos = {
+	        title: company,
+	        latlng: new kakao.maps.LatLng(latitude, hardness)
+	    };
+    
+    position.push(pos);
+    
+    callKakao(position, latitude, hardness);
+
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('searchInput').addEventListener('input', function() {
+    var keyword = this.value;
+
+    fetch('/vehicle/search.ex?keyword=' + keyword)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            var searchResultsHtml = '';
+            // 검색 데이터
+			console.log("data --> " , data);
+            for (var i = 0; i < data.length; i++) {
+            	var paramList = []
+            	paramList.push(data[i].company)
+            	paramList.push(data[i].latitude)
+            	paramList.push(data[i].hardness)
+            	//searchResultsHtml += '<div class="keywordList" style="margin:5%;" onclick="keywordClick(\'' + data[i].company + '\');">' + data[i].company + '</div>';
+            	searchResultsHtml += '<div class="keywordList" style="margin:5%;" onclick="keywordClick(this, \'' + paramList + '\');"> ' + data[i].company + '</div>';
+            }
+            document.getElementById('searchResults').innerHTML = searchResultsHtml;
+        });
+    });
+});
+
+
 
 </script>
 </body>
