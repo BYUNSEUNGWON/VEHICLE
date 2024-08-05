@@ -12,5 +12,8 @@ public interface RepairMapper {
 	    List<RepairVO> selectItems() throws Exception;
 	    
 	    RepairVO[] searchItems(String keyword) throws Exception;
+
+		List<RepairVO> selectItemsTitle(String title);
+
 	
 }

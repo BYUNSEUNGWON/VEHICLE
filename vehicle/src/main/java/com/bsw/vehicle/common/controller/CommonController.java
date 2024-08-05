@@ -40,6 +40,15 @@ public class CommonController {
 	    
 	}
 	
+	@GetMapping("/vehicle/itemSel.ex")
+	public ResponseEntity<RepairVO[]> selItme(@RequestParam("title") String title) throws Exception {
+		System.out.println("controller start ==> "+ title);
+	    RepairVO repair[] = commonService.selitem(title);
+	    
+	    return ResponseEntity.ok().body(repair);
+	    
+	}
+	
 	@GetMapping("/vehicle/search.ex")
 	public ResponseEntity<RepairVO[]> search(@RequestParam("keyword") String keyword) throws Exception {
 

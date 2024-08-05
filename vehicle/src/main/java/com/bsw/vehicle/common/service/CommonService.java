@@ -11,6 +11,8 @@ public interface CommonService {
 	RepairVO[] item() throws Exception;
 
 	RepairVO[] search(String keyword) throws Exception;
+
+	RepairVO[] selitem(String title);
 	
 	
 }

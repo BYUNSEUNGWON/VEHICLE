@@ -43,4 +43,14 @@ public class CommonServiceImpl implements CommonService{
 		return resultSearchList;
 	}
 
+	@Override
+	public RepairVO[] selitem(String title) {
+		List<RepairVO> resultList = repairMapper.selectItemsTitle(title); // 매퍼를 통해 select 문 실행
+
+		System.out.println("데이터 ==> " + resultList);
+		
+	    return resultList.toArray(new RepairVO[0]); // 리스트를 배열로 변환하여 반환
+
+	}
+
 }

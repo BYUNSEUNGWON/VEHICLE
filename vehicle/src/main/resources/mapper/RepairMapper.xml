@@ -40,6 +40,24 @@
 		WHERE MAP_ADDR_NM LIKE CONCAT('%',#{keyword},'%')
 			OR COMPANY LIKE CONCAT('%',#{keyword},'%')
 			OR NUMBER LIKE CONCAT('%',#{keyword},'%')
- 
+    </select>
+    
+    <select id="selectItemsTitle">    	
+		SELECT 
+			SEQ, 
+			MANAGER_NM , 
+			MANAGER_NUM , 
+			DATA_DT , 
+			BIZ_REGIST_DT ,
+			MAP_ADDR_NM ,
+			COMPANY ,
+			NUMBER ,
+			LATITUDE ,
+			HARDNESS ,
+			STATE ,
+			REGIST_DT ,
+			UPDT_DT 
+		FROM IA_REPAIR_TN
+		WHERE COMPANY = #{title}
     </select>
 </mapper>

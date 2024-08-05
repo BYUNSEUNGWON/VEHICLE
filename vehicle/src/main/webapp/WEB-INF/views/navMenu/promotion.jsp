@@ -108,7 +108,7 @@
 	</div>
 
   
-	<div class="paging-list">
+	<div class="paging-list" style="">
 	  <button class="write-button"><span class="ui-icon ui-icon-pencil"></span>글쓰기</button>
 	  <c:forEach items="${pageNumbers}" var="pageNumber" varStatus="status">
 	    <span class="page-number ${pageNumber == currentPage ? 'active' : ''}" 

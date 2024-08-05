@@ -10,13 +10,13 @@
 <style>
 
 .secNav {
-    margin-left: 10%;
-    background-color: white;
-    position: fixed;
-    height: 100%;
-    width: 18%;
-    border-right: #cdcdcd solid 1px;
-    text-align: center;
+  margin-left: 10%;
+  background-color: white;
+  position: fixed;
+  height: 100%;
+  width: 18%;
+  border-right: #cdcdcd solid 1px;
+  text-align: center;
 }
 
 .search {
@@ -54,12 +54,21 @@ img {
 }
 
 .keywordList:hover {
-    background-color: #D3D3D3;
+  background-color: #D3D3D3;
 }
 
 .active {
-    background-color: #D3D3D3;
+  background-color: #D3D3D3;
 }
+.infobox {
+   padding: 10px; 
+   border: 2px solid black; 
+   background: white; 
+   border-radius: 5px;
+   font-size: 14px; /* 텍스트 크기 */
+   box-shadow: 3px 3px 5px rgba(0,0,0,0.3); /* 그림자 효과 */
+}
+
 </style>
 </head>
 <body>
@@ -75,9 +84,7 @@ img {
     </div>
 
     <div id="map" style="margin-left:28%;padding:1px 16px;height:1000px;">
-    	<div>ks</div>
     </div>
-    
 
 <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>    
@@ -149,6 +156,7 @@ function callKakao(positions, lat, hard){
 	    };
 
 	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+	var lastOpenedInfobox = null;
 
 	// 마커 이미지의 이미지 주소입니다
 	var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
@@ -161,20 +169,53 @@ function callKakao(positions, lat, hard){
 	    // 마커 이미지를 생성합니다    
 	    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
 	    
-	    // 마커를 생성합니다
+	 	// 새로운 마커를 생성합니다
 	    var marker = new kakao.maps.Marker({
 	        map: map, // 마커를 표시할 지도
 	        position: positions[i].latlng, // 마커를 표시할 위치
-	        title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-	        image : markerImage // 마커 이미지
+	        title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+	        image: markerImage // 마커 이미지
 	    });
-	    
-	    kakao.maps.event.addListener(marker, 'click', function (){
-	        var position = this.getPosition();
+
+	    // 마커에 클릭 이벤트를 추가합니다
+	    kakao.maps.event.addListener(marker, 'click', function () {
+	    	
 	        var title = this.getTitle();
-	        console.log(position.Ma);
-	        console.log(position.La);
-	        console.log(title);
+	        var position = this.getPosition();
+
+	        $.ajax({
+	            url: "/vehicle/itemSel.ex",
+	            type: "GET",
+	            data : { 'title': title },
+	            success: function(response){
+	    			console.log(response);
+	             },
+	            error: function(xhr, status, error){
+	              console.log(error);
+	            }
+	          });
+	        
+	        // 인포박스 내용을 설정합니다
+	        var infoboxContent = '<div style="padding:5px; border:1px solid black; background:white; height: 200px; width: 200px; text-align: center;">' + 
+                      '<div style="margin-top: 10px;">' + title + '</div>' +  // 텍스트를 감쌈
+                      '<hr/></div>';
+                      
+            var infobox = new kakao.maps.CustomOverlay({
+	            content: infoboxContent,
+	            map: null,  // 초기에는 인포박스를 보이지 않도록 설정합니다.
+	            position: position,
+	            xAnchor: 0.5,
+	            yAnchor: 1.2
+	        });
+	        
+	        // 기존에 열려있던 인포박스가 있다면 닫습니다
+	        if (lastOpenedInfobox !== null) {
+	            lastOpenedInfobox.setMap(null);
+	        }
+
+	        // 새 인포박스를 열고, 이를 마지막으로 열린 인포박스로 갱신합니다
+	        infobox.setMap(map);
+	        lastOpenedInfobox = infobox;
 	    });
 	   
 	}
@@ -224,6 +265,11 @@ function keywordClick(element, paramList){
     
     position.push(pos);
     
+
+	console.log("position -->", position);
+	console.log("latitude -->", latitude);
+	console.log("hardness -->", hardness);
+    
     callKakao(position, latitude, hardness);
 
 }
@@ -245,7 +291,6 @@ document.addEventListener('DOMContentLoaded', function() {
             	paramList.push(data[i].company)
             	paramList.push(data[i].latitude)
             	paramList.push(data[i].hardness)
-            	//searchResultsHtml += '<div class="keywordList" style="margin:5%;" onclick="keywordClick(\'' + data[i].company + '\');">' + data[i].company + '</div>';
             	searchResultsHtml += '<div class="keywordList" style="margin:5%;" onclick="keywordClick(this, \'' + paramList + '\');"> ' + data[i].company + '</div>';
             }
             document.getElementById('searchResults').innerHTML = searchResultsHtml;
