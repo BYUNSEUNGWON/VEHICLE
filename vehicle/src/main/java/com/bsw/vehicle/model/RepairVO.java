@@ -2,48 +2,47 @@ package com.bsw.vehicle.model;
 
 public class RepairVO {
 	
-	private String managerNm;
-	private String managerNum;
-	private String dataDt;
-	private String bizRegistDt;
-	private String mapAddrNm;
+	private String manager_nm;
+	private String manager_num;
+	private String data_dt;
+	private String biz_regist_dt;
+	private String map_addr_nm;
 	private String company;
 	private String number;
 	private String latitude;
 	private String hardness;
 	private String state;
-	private String registDt;
-	private String updtDt;
-	
-	public String getManagerNm() {
-		return managerNm;
+	private String regist_dt;
+	private String updt_dt;
+	public String getManager_nm() {
+		return manager_nm;
 	}
-	public void setManagerNm(String managerNm) {
-		this.managerNm = managerNm;
+	public void setManager_nm(String manager_nm) {
+		this.manager_nm = manager_nm;
 	}
-	public String getManagerNum() {
-		return managerNum;
+	public String getManager_num() {
+		return manager_num;
 	}
-	public void setManagerNum(String managerNum) {
-		this.managerNum = managerNum;
+	public void setManager_num(String manager_num) {
+		this.manager_num = manager_num;
 	}
-	public String getDataDt() {
-		return dataDt;
+	public String getData_dt() {
+		return data_dt;
 	}
-	public void setDataDt(String dataDt) {
-		this.dataDt = dataDt;
+	public void setData_dt(String data_dt) {
+		this.data_dt = data_dt;
 	}
-	public String getBizRegistDt() {
-		return bizRegistDt;
+	public String getBiz_regist_dt() {
+		return biz_regist_dt;
 	}
-	public void setBizRegistDt(String bizRegistDt) {
-		this.bizRegistDt = bizRegistDt;
+	public void setBiz_regist_dt(String biz_regist_dt) {
+		this.biz_regist_dt = biz_regist_dt;
 	}
-	public String getMapAddrNm() {
-		return mapAddrNm;
+	public String getMap_addr_nm() {
+		return map_addr_nm;
 	}
-	public void setMapAddrNm(String mapAddrNm) {
-		this.mapAddrNm = mapAddrNm;
+	public void setMap_addr_nm(String map_addr_nm) {
+		this.map_addr_nm = map_addr_nm;
 	}
 	public String getCompany() {
 		return company;
@@ -75,32 +74,18 @@ public class RepairVO {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public String getRegistDt() {
-		return registDt;
+	public String getRegist_dt() {
+		return regist_dt;
 	}
-	public void setRegistDt(String registDt) {
-		this.registDt = registDt;
+	public void setRegist_dt(String regist_dt) {
+		this.regist_dt = regist_dt;
 	}
-	public String getUpdtDt() {
-		return updtDt;
+	public String getUpdt_dt() {
+		return updt_dt;
 	}
-	public void setUpdtDt(String updtDt) {
-		this.updtDt = updtDt;
+	public void setUpdt_dt(String updt_dt) {
+		this.updt_dt = updt_dt;
 	}
-	@Override
-	public String toString() {
-		return "RepairVO [managerNm=" + managerNm + ", managerNum=" + managerNum + ", dataDt=" + dataDt
-				+ ", bizRegistDt=" + bizRegistDt + ", mapAddrNm=" + mapAddrNm + ", company=" + company + ", number="
-				+ number + ", latitude=" + latitude + ", hardness=" + hardness + ", state=" + state + ", registDt="
-				+ registDt + ", updtDt=" + updtDt + ", getManagerNm()=" + getManagerNm() + ", getManagerNum()="
-				+ getManagerNum() + ", getDataDt()=" + getDataDt() + ", getBizRegistDt()=" + getBizRegistDt()
-				+ ", getMapAddrNm()=" + getMapAddrNm() + ", getCompany()=" + getCompany() + ", getNumber()="
-				+ getNumber() + ", getLatitude()=" + getLatitude() + ", getHardness()=" + getHardness()
-				+ ", getState()=" + getState() + ", getRegistDt()=" + getRegistDt() + ", getUpdtDt()=" + getUpdtDt()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
-	}	
-	
 	
 	
 	

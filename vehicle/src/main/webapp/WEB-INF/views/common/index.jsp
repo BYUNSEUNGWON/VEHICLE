@@ -35,11 +35,12 @@ input {
 }
 
 img {
-  position : absolute;
+  position: absolute;
   width: 17px;
   top: 10px;
-  right: 1%;
+  right: 0;
   margin: 0;
+  margin-right: -5px; /* 필요에 따라 값을 조정하세요 */
 }
 
 #searchResults {
@@ -68,15 +69,46 @@ img {
    font-size: 14px; /* 텍스트 크기 */
    box-shadow: 3px 3px 5px rgba(0,0,0,0.3); /* 그림자 효과 */
 }
+.copyable {
+  cursor: pointer;
+  color: black;
+  position: relative;
+}
 
+.copyable:hover {
+  color: blue;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 80px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%; /* 위로 위치 */
+  left: 50%;
+  margin-left: -40px; /* 중앙 정렬 */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.copyable:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
 </style>
 </head>
 <body>
     <div class="secNav">
 	    <div class="search">
-			<input type="text" id="searchInput" placeholder="검색어를 입력하여 주세오.">
+			<input type="text" id="searchInput" placeholder="주소, 이름을 입력하여 주세오.">
 		 	<img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png">
-	 	    <div id="searchResults"></div> 	
+	 	    <div id="searchResults">
+	 	    </div> 	
 		</div>
 		
 		<!-- 해당 api가 위도, 경도 구해주는 정확도가 많이 떨어져서... 일단은 주석 처러.. -->
@@ -144,6 +176,52 @@ function makePosition(itemList) {
 	callKakao(position, null, null)
 }
 
+function makeDiv(title, number, addr, bizDt){
+	
+	if(title == null || title == ""){
+		title = "미등록";
+	}
+	if(number == null || number == ""){
+		number = "미등록";
+	}
+	if(addr == null || addr == ""){
+		addr = "미등록";
+	}
+	if(bizDt == null || bizDt == ""){
+		bizDt = "미등록";
+	}
+	// 현재 날짜 객체 생성
+	var currentDate = new Date();
+	// 현재 연도 가져오기
+	var currentYear = currentDate.getFullYear();
+	
+	var career = bizDt.substr(0,4);
+	
+	career = currentYear - career + 1;
+	
+    var result = '<div style="padding:5px; border:1px solid black; background:white; width: 200px; text-align: center;">' +
+    '<div style="margin-top: 10px;">' + title + '</div>' + '<hr/>' +
+    '<div class="copyable" style="margin: 5%;" onclick="copyToClipboard(\'' + number + '\')">전화번호 : ' + number + 
+      '<span class="tooltip">복사하기</span>' + 
+    '</div>' +
+    '<div class="copyable" style="margin: 5%; word-break: break-word; white-space: normal;" onclick="copyToClipboard(\'' + addr + '\')">주소 : ' + addr + 
+      '<span class="tooltip">복사하기</span>' + 
+    '</div>' +
+    '<div style="margin: 5%; word-break: break-word; white-space: normal;">사업자등록 : ' + bizDt + '</div>' +
+    '<div style="margin: 5%; word-break: break-word; white-space: normal;">오픈(만) : ' + career + '년 </div>' +
+    '</div>';
+
+  return result;
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function () {
+	  alert("복사가 완료되었습니다.");
+  }, function (err) {
+	  alert("복사실패 이유 : " + err);
+  });
+}
+
 function callKakao(positions, lat, hard){
 	
 	if(lat == null) lat = 36.0134925;
@@ -182,40 +260,45 @@ function callKakao(positions, lat, hard){
 	    	
 	        var title = this.getTitle();
 	        var position = this.getPosition();
-
+	        
 	        $.ajax({
 	            url: "/vehicle/itemSel.ex",
 	            type: "GET",
+	            dataType : "json",
 	            data : { 'title': title },
 	            success: function(response){
-	    			console.log(response);
+	            	
+	    			var number = response[0].number;		// 매장 전화번호
+	    			var addr = response[0].map_addr_nm;		// 매장 주소
+	    			var bizDt = response[0].biz_regist_dt;	// 사업자 등록 일자
+	    			
+	    			// 인포박스 내용을 설정합니다
+	    	        var infoboxContent = makeDiv(title, number, addr, bizDt);
+	                          
+	    	        var infobox = new kakao.maps.CustomOverlay({
+	    	            content: infoboxContent,
+	    	            map: null,  // 초기에는 인포박스를 보이지 않도록 설정합니다.
+	    	            position: position,
+	    	            xAnchor: 0.5,
+	    	            yAnchor: 1.2
+	    	        });
+	    	        
+	    	        // 기존에 열려있던 인포박스가 있다면 닫습니다
+	    	        if (lastOpenedInfobox !== null) {
+	    	            lastOpenedInfobox.setMap(null);
+	    	        }
+
+	    	        // 새 인포박스를 열고, 이를 마지막으로 열린 인포박스로 갱신합니다
+	    	        infobox.setMap(map);
+	    	        lastOpenedInfobox = infobox;
 	             },
 	            error: function(xhr, status, error){
 	              console.log(error);
 	            }
 	          });
 	        
-	        // 인포박스 내용을 설정합니다
-	        var infoboxContent = '<div style="padding:5px; border:1px solid black; background:white; height: 200px; width: 200px; text-align: center;">' + 
-                      '<div style="margin-top: 10px;">' + title + '</div>' +  // 텍스트를 감쌈
-                      '<hr/></div>';
-                      
-            var infobox = new kakao.maps.CustomOverlay({
-	            content: infoboxContent,
-	            map: null,  // 초기에는 인포박스를 보이지 않도록 설정합니다.
-	            position: position,
-	            xAnchor: 0.5,
-	            yAnchor: 1.2
-	        });
-	        
-	        // 기존에 열려있던 인포박스가 있다면 닫습니다
-	        if (lastOpenedInfobox !== null) {
-	            lastOpenedInfobox.setMap(null);
-	        }
-
-	        // 새 인포박스를 열고, 이를 마지막으로 열린 인포박스로 갱신합니다
-	        infobox.setMap(map);
-	        lastOpenedInfobox = infobox;
+	                  
+           
 	    });
 	   
 	}
