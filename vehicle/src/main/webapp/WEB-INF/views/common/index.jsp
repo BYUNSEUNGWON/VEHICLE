@@ -17,6 +17,7 @@
   width: 18%;
   border-right: #cdcdcd solid 1px;
   text-align: center;
+  overflow-y: auto;
 }
 
 .search {

@@ -43,8 +43,8 @@
     }
     
     .sub-btn {
-    display: flex;
-    justify-content: flex-end;
+	    display: flex;
+	    justify-content: flex-end;
 	}
 	
 	.sub-btn button {
@@ -52,7 +52,16 @@
 	    height: 40px;
 	    margin-left: 10px;
 	}
-    
+	
+	.editor-menu {
+		margin-top: 1%;
+		margin-bottom: 1%;
+	}
+	
+	.btnCommon {
+		height: 30px;
+	}
+	
 </style>
 </head>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -68,6 +77,9 @@
         const btnOrderedList = document.getElementById('btn-ordered-list');
         const btnUnorderedList = document.getElementById('btn-unordered-list');
         const title = document.getElementById('title');
+        
+        var uploadedFile = null;
+
 
         btnBold.addEventListener('click', function () {
             setStyle('bold');
@@ -104,7 +116,7 @@
         // 이미지 선택 시 이벤트 핸들러
         imageSelector.addEventListener('change', function (e) {
             const files = e.target.files;
-            if (!!files) {
+            if (!!files && files.length > 0) { // 선택된 파일이 있는지 확인합니다.
                 insertImageData(files[0]);
             }
         });
@@ -143,12 +155,9 @@
 
         // 이미지 데이터를 삽입하는 함수
         function insertImageData(file) {
-            const reader = new FileReader();
-            reader.addEventListener('load', function (e) {
-                focusEditor();
-                document.execCommand('insertImage', false, reader.result);
-            });
-            reader.readAsDataURL(file);
+        	const reader = new FileReader();
+            uploadedFile = file; 
+            console.log("이미지 파일이 준비되었습니다.");
         }
 
         // 스타일 설정 함수
@@ -208,20 +217,23 @@
         
         // 제출하기 버튼 클릭 시
         wriSubmit.addEventListener('click', function () {
-        	const bodyContent = document.getElementsByTagName('body')[0].innerHTML;
-            const styleContent = document.getElementsByTagName('style')[0].innerHTML;
+        	
+            const title = document.getElementById('title').value;
+            const contents = document.getElementById('editor').innerHTML;
+            const formData = new FormData();
             
-            console.log("bodyContent ==> ", bodyContent);
-            console.log("styleContent ==> ", styleContent);
+            formData.append('title', title);
+            formData.append('contents', contents);
+            if (uploadedFile) { // 업로드된 파일이 있는 경우에만 추가합니다.
+                formData.append('image', uploadedFile);  
+            }
             
-            console.log("ajax start")
             $.ajax({
                 type: 'POST',
                 url: '/vehicle/promotion/submit.ex',
-                data: {
-                    body: bodyContent,
-                    style: styleContent
-                },
+                data: formData,                    
+                processData: false,
+                contentType: false,
                 success: function (response) {
                     if(response == "성공"){
                         alert("성공적으로 제출되었습니다. 추후 관리자 승인 시 게시글이 올라갈 예정입니다.");
@@ -237,8 +249,7 @@
                       window.close();
                 }
             });
-
-        });
+        }); 
         
      	// 초기화 버튼 클릭 시
         wriReset.addEventListener('click', function () {
@@ -256,40 +267,40 @@
 <body>
 	<div class="body-back">
 		<div class="header">
-			<input id="title" type="text" placeholder="제목을 입력하세요..." style="width: 100%; border: 1px solid; border-radius: 5px; height: 30px; padding: 0;">
+			<input id="title" type="text" placeholder=" 제목을 입력하세요..." style="width: 100%; border: 1px solid; border-radius: 5px; height: 30px; padding: 0;">
 		</div>
 	
 		<div class="middle">
 		    <div class="editor-menu">
-		        <button id="btn-bold">
+		        <button id="btn-bold" class="btnCommon">
 		            <b>B</b>
 		        </button>
-		        <button id="btn-italic">
+		        <button id="btn-italic" class="btnCommon">
 		            <i>I</i>
 		        </button>
-		        <button id="btn-underline">
+		        <button id="btn-underline" class="btnCommon">
 		            <u>U</u>
 		        </button>
-		        <button id="btn-strike">
+		        <button id="btn-strike" class="btnCommon">
 		            <s>S</s>
 		        </button>
-		        <button id="btn-ordered-list">
+		        <button id="btn-ordered-list" class="btnCommon">
 		            OL
 		        </button>
-		        <button id="btn-unordered-list">
+		        <button id="btn-unordered-list" class="btnCommon">
 		            UL
 		        </button>
-		        <button id="btn-image">
-		            IMG
-		        </button>
+		        <button id="btn-image" class="btnCommon">
+		           썸네일
+		       </button>
 		    </div>
 		    <input id="img-selector" type="file" accept="image/*" />
 		    
 		    <div id="editor" contenteditable="true" style="border: 1px solid; border-radius: 5px; height: 1000px;" data-placeholder="내용을 입력하세요..."></div>
 		    
 		    <div class="sub-btn">
-		        <button type="submit" id="wri-submit" style="margin-top: 3%;">제출하기</button>
 		        <button type="reset" id="wri-reset" style="margin-top: 3%;">초기화</button>
+		        <button type="submit" id="wri-submit" style="margin-top: 3%;">제출하기</button>
 		    </div>
 	    </div>
     </div>
