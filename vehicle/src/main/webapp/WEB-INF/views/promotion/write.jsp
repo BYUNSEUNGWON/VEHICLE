@@ -119,6 +119,7 @@
             if (!!files && files.length > 0) { // 선택된 파일이 있는지 확인합니다.
                 insertImageData(files[0]);
             }
+            alert("정상적으로 선택되었습니다.");
         });
 
         // 에디터 키 누름 이벤트 핸들러

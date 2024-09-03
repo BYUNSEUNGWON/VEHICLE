@@ -8,7 +8,14 @@ public class PromotionVO {
 	private String regist_user_id;
 	private String regist_dt;
 	private String accept_yn;
+	private String promotion_id;
 	
+	public String getPromotion_id() {
+		return promotion_id;
+	}
+	public void setPromotion_id(String promotion_id) {
+		this.promotion_id = promotion_id;
+	}
 	public String getTitle() {
 		return title;
 	}

@@ -6,6 +6,7 @@
     <insert id="insertContents" parameterType="com.bsw.vehicle.model.PromotionVO">
     	INSERT INTO IA_PROMOTION_TN
 			(
+			  PROMOTION_ID,
 			  TITLE,
 			  CONTENTS,
 			  FILE_ID,
@@ -14,6 +15,7 @@
 			  ACCEPT_YN
 			)
 			VALUES (
+			  #{promotion_id},
 			  #{title},
 			  #{contents},
 			  #{file_id},
@@ -22,5 +24,118 @@
 			  'N'
 			)
     </insert>
+    
+    <insert id="insertFile" parameterType="com.bsw.vehicle.model.AttachVO">
+    	INSERT INTO IA_FILE_TN
+			(
+			  ORI_NAME,
+			  FILE_ID,
+			  FILE_SIZE,
+			  FILE_PATH,
+			  FILE_EXT,
+			  FILE_URL,
+			  REGIST_USER_ID,
+			  REGIST_DT
+			)
+			VALUES (
+			  #{ori_name},
+			  #{file_id},
+			  #{file_size},
+			  #{file_path},
+			  #{file_ext},
+			  #{file_url},
+			  #{regist_user_id},
+			  NOW()
+			)
+    </insert>
+    
+    <select id="countProIdx">
+    	SELECT COUNT(*) FROM IA_PROMOTION_TN WHERE ACCEPT_YN = "Y"
+    </select>
+    
+    <select id="getProItem">
+		SELECT
+		        ROW,
+		        SEQ,
+		        PROMOTION_ID,
+		        TITLE,
+		        CONTENTS,
+		        FILE_ID,
+		        REGIST_USER_ID,
+		        REGIST_DT,
+		        ACCEPT_YN
+		    FROM
+		        (
+		            SELECT
+		                @row_number := @row_number + 1 AS ROW,
+		                IA.*
+		            FROM
+		                (
+		                    SELECT 
+		                        SEQ,
+		                        PROMOTION_ID, 
+		                        TITLE, 
+		                        CONTENTS, 
+		                        FILE_ID, 
+		                        REGIST_USER_ID, 
+		                        REGIST_DT, 
+		                        ACCEPT_YN  
+		                    FROM 
+		                        IA_PROMOTION_TN 
+		                    WHERE 
+		                        ACCEPT_YN = 'Y'
+		                ) IA,
+		                (SELECT @row_number := 0) r
+		        ) AS T
+		      WHERE ROW = #{i}
+    </select>
+    
+    
+    <select id="getImgUrl">
+		SELECT FILE_URL FROM IA_FILE_TN WHERE FILE_ID IN (
+			SELECT
+				FILE_ID
+		    FROM
+			        (
+			            SELECT
+			                @row_number := @row_number + 1 AS ROW,
+			                IA.*
+			            FROM
+			                (
+			                    SELECT 
+			                        SEQ,       
+		        					PROMOTION_ID, 
+			                        TITLE, 
+			                        CONTENTS, 
+			                        FILE_ID, 
+			                        REGIST_USER_ID, 
+			                        REGIST_DT, 
+			                        ACCEPT_YN  
+			                    FROM 
+			                        IA_PROMOTION_TN 
+			                    WHERE 
+			                        ACCEPT_YN = 'Y'
+			                ) IA,
+			                (SELECT @row_number := 0) r
+			        ) AS T
+			      WHERE ROW = #{i}
+	      )
+    </select>
+    <select id="getDetail">
+		SELECT
+		        SEQ,
+		        PROMOTION_ID,
+		        TITLE,
+		        CONTENTS,
+		        FILE_ID,
+		        REGIST_USER_ID,
+		        REGIST_DT,
+		        ACCEPT_YN
+	    FROM
+			IA_PROMOTION_TN
+		WHERE 1=1 
+			AND PROMOTION_ID = #{promotion_id}
+			AND	TITLE = #{title}     
+    </select>
     
 </mapper>
