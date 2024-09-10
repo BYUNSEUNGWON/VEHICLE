@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bsw.vehicle.mapper.PromotionMapper;
 import com.bsw.vehicle.model.AttachVO;
+import com.bsw.vehicle.model.CommentVO;
 import com.bsw.vehicle.model.PromotionVO;
 import com.bsw.vehicle.promotion.service.PromotionService;
 
@@ -119,24 +122,15 @@ public class PromotionServiceImpl implements PromotionService{
 		}
 		String userId = promotion.getRegist_user_id();
 		String litContents = promotion.getContents();
-		
-		litContents = litContents.replaceAll("<br>", "");
-		
-		if (litContents.length() > 250) {
-		    litContents = litContents.substring(0, 250) + "....." + "<span style=\"font-weight: bold;\">[더보기]</span>";
-		} else {
-		    // 길이가 300자보다 짧은 경우, 공백으로 채웁니다
-		    int paddingLength = 250 - litContents.length();
-		    StringBuilder padding = new StringBuilder();
-		    for (int j = 0; j < paddingLength; j++) {
-		        padding.append(" ");
-		    }
-		    litContents = litContents + padding.toString();
-		    litContents = litContents.substring(0, 250) + "....." + "<span style=\"font-weight: bold;\">[더보기]</span>";
-		}
+		String litContentsNoHtml = extractTextFromHtml(litContents);
+		String limitedText = getLimitedText(litContentsNoHtml, 100);
+		String updatedHtml = replaceTextInHtml(litContents, limitedText);
 
+		// img 태그, br 제거
+		String finalHtml = updatedHtml.replaceAll("<img[^>]*>", "").replaceAll("<br>", "");
 		
 		String proId = promotion.getPromotion_id();
+		int commentCount = promotionMapper.getCommCount(promotion.getPromotion_id());
 		
 		return gridItemsBuilder.append("\r\n")
 			    .append("        <div class=\"grid-item\" style=\"display: flex; position: relative; width: 100%; background-color: #f3f3f3; padding: 10px;\">\r\n") 
@@ -152,10 +146,23 @@ public class PromotionServiceImpl implements PromotionService{
 			    .append("</h2>\r\n")
 			    .append("                    </div>\r\n")
 			    .append("                    <div id=\"litContents\">\r\n")
-			    .append(litContents)
+			    .append(finalHtml)
 			    .append("                    </div>\r\n")
 			    .append("                </div>\r\n")
 			    .append("            </div>\r\n")
+			    .append("<div id=\"searchComment\">\r\n")
+			    .append("<div id=\"searchPoi\">")
+			    .append( "    <span class=\"icon-with-text\">\r\n")
+			    .append( "        <span class=\"ui-icon ui-icon-search\"></span>")
+			    .append(" " + promotion.getClick())
+			    .append( "    </span>\r\n")
+			    .append( "    <br/>\r\n")
+			    .append("    <span class=\"icon-with-text\">\r\n")
+			    .append("        <span class=\"ui-icon ui-icon-comment\"></span>")
+			    .append(" " + commentCount)
+			    .append("    </span>\r\n")
+			    .append("</div>")
+			    .append( "</div>")
 			    .append("            <div class=\"grid-image\" style=\"flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px;\">\r\n")
 			    .append("                <img src=\"")
 			    .append(imageUrl) 
@@ -169,6 +176,51 @@ public class PromotionServiceImpl implements PromotionService{
 	@Override
 	public PromotionVO showDetail(String promotion_id, String title) {
 		return promotionMapper.getDetail(promotion_id, title);
+	}
+	
+	// HTML 태그와 IMG 태그를 제외한 텍스트를 추출하는 함수
+	public String extractTextFromHtml(String html) {
+	    return html.replaceAll("<img[^>]*>", "").replaceAll("<[^>]*>", "").replaceAll("\\s+", " ").trim();
+	}
+
+	public String getLimitedText(String text, int limit) {
+	    if (text.length() > limit) {
+	        return text.substring(0, limit) + "....." + "<span style=\"font-weight: bold;\">[더보기]</span>";
+	    } else {
+	        return text + "....." + "<span style=\"font-weight: bold;\">[더보기]</span>";
+	    }
+	}
+
+	// 원래 HTML에서 텍스트 부분을 대체하는 함수
+	public String replaceTextInHtml(String html, String limitedText) {
+	    return html.replaceFirst("(?s)(<[^>]+>\\s*)*" + Pattern.quote(limitedText) + "(\\s*<[^>]+>)*", limitedText);
+	}
+
+
+	@Override
+	public List<CommentVO> showComment(String promotion_id) {
+		return promotionMapper.getComment(promotion_id);
+	}
+
+
+	@Override
+	public void updtClick(String promotion_id) {
+		promotionMapper.updtClick(promotion_id);
+	}
+
+
+	@Override
+	public String insertComment(String comment, String promotion_id, String regist_user_id) {
+		
+		int seq = promotionMapper.getCommCount(promotion_id);
+		int promotion_seq = seq + 1;
+		int result = promotionMapper.insertComment(comment, promotion_id, promotion_seq, regist_user_id);
+			    
+	    if (result == 1) {
+	        return "SUCCESS";
+	    } else {
+	        return "FAIL";
+	    }
 	}
 }
 

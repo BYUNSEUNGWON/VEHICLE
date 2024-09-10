@@ -9,7 +9,14 @@ public class PromotionVO {
 	private String regist_dt;
 	private String accept_yn;
 	private String promotion_id;
+	private String click;
 	
+	public String getClick() {
+		return click;
+	}
+	public void setClick(String click) {
+		this.click = click;
+	}
 	public String getPromotion_id() {
 		return promotion_id;
 	}

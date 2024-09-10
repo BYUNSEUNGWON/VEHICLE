@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // /files/** 경로를 D:/upload/img/ 디렉토리에 매핑
-        registry.addResourceHandler("/files/**")
+        registry.addResourceHandler("/vehicle/files/**")
                 .addResourceLocations("file:D:/upload/img/");
     }
 }

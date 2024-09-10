@@ -122,10 +122,8 @@ h2 {
   
 
   function showItem(title, promotion_id){
-  		
   		var url = "/vehicle/promotion/showItem.ex?title=" + encodeURIComponent(title) + "&promotion_id=" + encodeURIComponent(promotion_id);
 		window.open(url, "_blank", "width=1000, height=3000, left=10, top=10, menubar=no, titlebar=no, toolbar=no, status=no, location=no, scrollbars=yes, resizable=yes");
-
   	}
 
 </script>
@@ -134,8 +132,8 @@ h2 {
 		${gridItem}
 	</div>
 
-  
-	<div class="paging-list" style="">
+
+	<div class="paging-list">
 	  <button class="write-button"><span class="ui-icon ui-icon-pencil"></span>글쓰기</button>
 	  <c:forEach items="${pageNumbers}" var="pageNumber" varStatus="status">
 	    <span class="page-number ${pageNumber == currentPage ? 'active' : ''}" 
