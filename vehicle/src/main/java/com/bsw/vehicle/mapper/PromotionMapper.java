@@ -9,6 +9,7 @@ import com.bsw.vehicle.model.AttachVO;
 import com.bsw.vehicle.model.CommentVO;
 import com.bsw.vehicle.model.PromotionVO;
 import com.bsw.vehicle.model.RepairVO;
+import com.bsw.vehicle.model.UserVO;
 
 @Mapper
 public interface PromotionMapper {
@@ -32,6 +33,10 @@ public interface PromotionMapper {
 		void updtClick(String promotion_id);
 
 		int insertComment(@Param("comment") String comment, @Param("promotion_id") String promotion_id, @Param("promotion_seq") int promotion_seq, @Param("regist_user_id") String regist_user_id);
+
+		List<PromotionVO> serachItem(@Param("param") String param);
+
+		UserVO getUserInfo(@Param("userId") String userId);
 
 
 

@@ -178,4 +178,38 @@
     	INSERT INTO IA_COMMENT_TN (PROMOTION_ID, PROMOTION_SEQ, COMMENT, REGIST_USER_ID, REGIST_DT)
     	VALUES(#{promotion_id}, #{promotion_seq}, #{comment}, #{regist_user_id}, now())
     </insert>
+    
+    <select id="serachItem">
+		SELECT
+    		    SEQ,
+		        PROMOTION_ID,
+		        TITLE,
+		        CONTENTS,
+		        FILE_ID,
+		        CLICK,
+		        REGIST_USER_ID,
+		        REGIST_DT,
+		        ACCEPT_YN
+	    FROM
+			IA_PROMOTION_TN
+		WHERE TITLE LIKE CONCAT('%', #{param}, '%')
+			AND ACCEPT_YN = 'Y'
+    </select>
+    
+    <select id="getUserInfo">
+    	SELECT 
+    		SEQ,
+    		USER_ID,
+    		USER_PW,
+    		USER_NAME,
+    		USER_NICK,
+    		ICON,
+    		EMAIL,
+    		PHONE,
+    		REGIST_DT,
+    		UPDT_DT
+   		FROM IA_USER_TN
+   		WHERE 1=1
+   		AND USER_ID = #{userId}
+    </select>
 </mapper>

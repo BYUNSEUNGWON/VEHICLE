@@ -28,6 +28,8 @@ public interface PromotionService {
 
 	String insertComment(String comment, String promotion_id, String regist_user_id);
 
+	List<PromotionVO> serachItem(String param);
+
 	
 
 }

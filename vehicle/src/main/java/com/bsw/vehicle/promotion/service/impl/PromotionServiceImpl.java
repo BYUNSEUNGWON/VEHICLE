@@ -16,6 +16,7 @@ import com.bsw.vehicle.mapper.PromotionMapper;
 import com.bsw.vehicle.model.AttachVO;
 import com.bsw.vehicle.model.CommentVO;
 import com.bsw.vehicle.model.PromotionVO;
+import com.bsw.vehicle.model.UserVO;
 import com.bsw.vehicle.promotion.service.PromotionService;
 
 @Service
@@ -123,15 +124,41 @@ public class PromotionServiceImpl implements PromotionService{
 		String userId = promotion.getRegist_user_id();
 		String litContents = promotion.getContents();
 		String litContentsNoHtml = extractTextFromHtml(litContents);
-		String limitedText = getLimitedText(litContentsNoHtml, 100);
+		String limitedText = getLimitedText(litContentsNoHtml, 30);
 		String updatedHtml = replaceTextInHtml(litContents, limitedText);
-
+		
+		UserVO user = new UserVO();
+		user = promotionMapper.getUserInfo(userId);
+		
 		// img 태그, br 제거
-		String finalHtml = updatedHtml.replaceAll("<img[^>]*>", "").replaceAll("<br>", "");
+		String finalHtml = updatedHtml.replaceAll("<img[^>]*>", "").replaceAll("<br>", "").replaceAll("<br/>", "").replaceAll("\n", "").replaceAll("<div>", "").replaceAll("</div>", "");
+
+		if(finalHtml.length() > 50) {
+			finalHtml = finalHtml.substring(0, 50);
+			finalHtml += "<br>" + "....." + "<span style=\"font-weight: bold;\">[더보기]</span>";
+		} else {
+			finalHtml += "<br>" + "....." + "<span style=\"font-weight: bold;\">[자세히]</span>";	
+		}
 		
 		String proId = promotion.getPromotion_id();
 		int commentCount = promotionMapper.getCommCount(promotion.getPromotion_id());
-		
+/*
+	    .append("<div id=\"searchComment\">\r\n")
+	    .append("<div id=\"searchPoi\">")
+	    .append( "    <span class=\"icon-with-text\">\r\n ")
+	    .append( "        <span class=\"ui-icon ui-icon-search\"></span>")
+	    .append(" " + promotion.getClick())
+	    .append( "    </span>\r\n")
+	    .append( "    <br/>\r\n")
+	    .append("    <span class=\"icon-with-text\">\r\n")
+	    .append("        <span class=\"ui-icon ui-icon-comment\"></span>")
+	    .append(" " + commentCount)
+	    .append("    </span>\r\n")
+	    .append("</div>")
+	    .append( "</div>")
+	    https://ssl.pstatic.net/melona/libs/1503/1503232/2e9c78f3ddd75e9f41cc_20240910201820555.jpg
+	    https://blogpfthumb-phinf.pstatic.net/20101228_187/ameliepink_1293497980792_oGF07W_png/11-1.png?type=s1
+*/
 		return gridItemsBuilder.append("\r\n")
 			    .append("        <div class=\"grid-item\" style=\"display: flex; position: relative; width: 100%; background-color: #f3f3f3; padding: 10px;\">\r\n") 
 			    .append("            <div class=\"grid-detail\" style=\"flex: 2; padding: 10px; display: flex; align-items: center;\">\r\n")
@@ -140,6 +167,12 @@ public class PromotionServiceImpl implements PromotionService{
 			    .append("', '")
 			    .append(proId) 
 			    .append("')\">")
+			    .append("<div class=\"regist-user\">")
+			    .append("<img width=\"32\" height=\"32\" class=\"img_author\" src=\"https://blogpfthumb-phinf.pstatic.net/20101228_187/ameliepink_1293497980792_oGF07W_png/11-1.png?type=s1\">")
+			    .append("<span class=\"grid-user\">")
+			    .append(user.getUser_nick())
+			    .append("</span>")
+			    .append("</div>")
 			    .append("                    <div id=\"title\">\r\n")
 			    .append("                        <h2>")
 			    .append(promotion.getTitle())
@@ -147,22 +180,15 @@ public class PromotionServiceImpl implements PromotionService{
 			    .append("                    </div>\r\n")
 			    .append("                    <div id=\"litContents\">\r\n")
 			    .append(finalHtml)
+			    .append("<br>")
+			    .append("<div class=\"commentClick\">")
+			    .append("조회수 : " + promotion.getClick())
+			    .append("<br>")
+			    .append("댓글 : " + commentCount)
+			    .append("</div>")
 			    .append("                    </div>\r\n")
 			    .append("                </div>\r\n")
 			    .append("            </div>\r\n")
-			    .append("<div id=\"searchComment\">\r\n")
-			    .append("<div id=\"searchPoi\">")
-			    .append( "    <span class=\"icon-with-text\">\r\n")
-			    .append( "        <span class=\"ui-icon ui-icon-search\"></span>")
-			    .append(" " + promotion.getClick())
-			    .append( "    </span>\r\n")
-			    .append( "    <br/>\r\n")
-			    .append("    <span class=\"icon-with-text\">\r\n")
-			    .append("        <span class=\"ui-icon ui-icon-comment\"></span>")
-			    .append(" " + commentCount)
-			    .append("    </span>\r\n")
-			    .append("</div>")
-			    .append( "</div>")
 			    .append("            <div class=\"grid-image\" style=\"flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px;\">\r\n")
 			    .append("                <img src=\"")
 			    .append(imageUrl) 
@@ -221,6 +247,12 @@ public class PromotionServiceImpl implements PromotionService{
 	    } else {
 	        return "FAIL";
 	    }
+	}
+
+
+	@Override
+	public List<PromotionVO> serachItem(String param) {
+		return promotionMapper.serachItem(param);
 	}
 }
 

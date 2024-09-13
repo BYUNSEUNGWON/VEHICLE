@@ -8,12 +8,42 @@
 <title>Insert title here</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style type="text/css">
-
 .content {
   margin-left: 10%;
   margin-bottom: 3%;
   margin-left: 200px;
   margin-right: 150px;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top:10px;
+}
+
+.search-box input[type="text"] {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+}
+
+.search-box button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-left: none;
+  background-color: #f1f1f1;
+  color: black;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  background-color: #357ae8;
 }
 
 .grid-item {
@@ -22,9 +52,11 @@
   height: 200px;    
   margin-top: 20px;
 }
+
 .grid-item:last-child {
     margin-right: 0;
 }
+
 .grid-image {
     flex: 1;
     display: flex;
@@ -39,6 +71,7 @@
     object-fit: cover; /* 이미지가 컨테이너를 덮도록 조정 */
     border-radius: 10px; /* 모서리를 둥글게 처리하여 부드러운 효과 */
 }
+
 .grid-detail {
   background-color: #f1f1f1;
   padding: 20px;
@@ -46,9 +79,9 @@
 }
 
 .paging-list {
-	text-align: center;
-  	margin-left: 10%;
-  	margin-bottom: 5%;
+  text-align: center;
+  margin-left: 10%;
+  margin-bottom: 5%;
 }
 
 .page-number {
@@ -72,10 +105,28 @@
 }
 
 h2 {
-	margin-top: 20px;
+  margin-top: 20px;
 }
+
 #title:hover, #litContents:hover {    
-	text-decoration: underline;
+  text-decoration: underline;
+}
+.commentClick {
+	margin-top: 25px;
+	font-size: small;
+}
+.regist-user {
+	display: inline;
+	font-size: small;
+	margin-left: 5px;
+}
+.regist-user img {
+    border-radius: 50%
+}
+.grid-user {
+	margin-left: 5px;
+	position: absolute;
+	top: 16px;
 }
 </style>
 </head>
@@ -117,6 +168,24 @@ h2 {
    	 	window.open(url, "_blank", "width=1000, height=3000, left=10, top=10, menubar=no, titlebar=no, toolbar=no, status=no, location=no, scrollbars=yes, resizable=yes");
 
    	});
+   	
+    $("#search-form").submit(function(event) {
+        event.preventDefault();  // 기본 제출 동작을 막기
+        var searchQuery = $("#search-input").val();
+        $.ajax({
+            url: "/vehicle/promotion/search.ex",
+            type: "POST",
+            data: {searchQuery: searchQuery},
+            success: function(response){
+              // 성공적으로 데이터를 가져온 경우
+    		  $(".content").html(response);
+              $(".paging-list").hide(); // 페이징 리스트를 숨기기
+             },
+            error: function(xhr, status, error){
+              alert(error);
+            }
+          });
+      });
 
   });
   
@@ -128,11 +197,18 @@ h2 {
 
 </script>
 <body>
+
 	<div class="content">
 		${gridItem}
 	</div>
 
-
+	<div class="search-box">
+	  <form id="search-form">
+	    <input type="text" id="search-input" name="search" placeholder="Search...">
+	    <button type="submit">Search</button>
+	  </form>
+	</div>
+  
 	<div class="paging-list">
 	  <button class="write-button"><span class="ui-icon ui-icon-pencil"></span>글쓰기</button>
 	  <c:forEach items="${pageNumbers}" var="pageNumber" varStatus="status">

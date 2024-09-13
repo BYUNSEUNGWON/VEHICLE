@@ -10,7 +10,15 @@ public class PromotionVO {
 	private String accept_yn;
 	private String promotion_id;
 	private String click;
+	private String icon;
 	
+	
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
 	public String getClick() {
 		return click;
 	}

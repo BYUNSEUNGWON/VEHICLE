@@ -216,5 +216,23 @@ public class PromotionController {
 			 return ResponseEntity.ok().body("FAIL");	 
 		 }
 	  }
+    
+
+      @PostMapping("/vehicle/promotion/search.ex")
+	  public ResponseEntity<String> serach(@RequestParam("searchQuery") String param, Model model) {
+
+		StringBuilder gridItemsBuilder = new StringBuilder();
+		
+		List<PromotionVO> promotion = new ArrayList<>();
+		
+		promotion = promotionService.serachItem(param);
+		
+		 for(int k = 0; k < promotion.size(); k++) {
+			 gridItemsBuilder = promotionService.getContents(gridItemsBuilder, promotion.get(k), k);
+		 }
+		 
+	    // 성공 시 응답 데이터를 JSON 형태로 반환
+	    return ResponseEntity.ok().body(gridItemsBuilder.toString());
+	  }
     	
 }
