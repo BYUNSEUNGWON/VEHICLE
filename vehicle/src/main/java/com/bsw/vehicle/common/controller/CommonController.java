@@ -62,4 +62,9 @@ public class CommonController {
 		
 	    return ResponseEntity.ok().body(searchResults);
 	}
+	
+	@RequestMapping("/vehicle/login.ex")
+	public String login(Model model) throws Exception { 
+		 return "/login/login"; 
+	}
 }

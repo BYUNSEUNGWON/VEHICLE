@@ -38,7 +38,7 @@ public class PromotionController {
     @Value("${file.upload-dir}")
     private String uploadDir;
     
-	@RequestMapping("/vehicle/promotion.ex")
+  @RequestMapping("/vehicle/promotion.ex")
 	  public String promotion(Model model) throws Exception {
 		
 		 StringBuilder gridItemsBuilder = new StringBuilder();
@@ -75,7 +75,7 @@ public class PromotionController {
 	}
 	
 
-    @PostMapping("/vehicle/promotion/paging.ex")
+	  @PostMapping("/vehicle/promotion/paging.ex")
 	  public ResponseEntity<String> promotionPage(@RequestParam("page") int pageNumber, Model model) {
 
 		 StringBuilder gridItemsBuilder = new StringBuilder();
